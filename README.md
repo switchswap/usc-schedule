@@ -1,2 +1,2 @@
 # USC-schedule
-USC Schedule of Classes API
+USC Schedule of Classes API wrapper
