@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="usc-schedule",
-    version="0.0.1",
+    version="0.1.1",
     author="Swapnil Patel",
     author_email="swapnil@usc.edu",
     description="A USC Class Schedule API wrapper",
