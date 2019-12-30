@@ -14,8 +14,7 @@ setuptools.setup(
     url="https://github.com/TrickRoom/USC-schedule",
     packages=setuptools.find_packages(),
     install_requires=[
-        'requests',
-        'json'
+        'requests'
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
