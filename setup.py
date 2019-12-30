@@ -17,9 +17,15 @@ setuptools.setup(
         'requests'
     ],
     classifiers=[
+        "Programming Language :: Python",
         "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.6",
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
         "Operating System :: OS Independent",
+        "Topic :: Education",
+        "Topic :: Internet",
+        "Topic :: Utilities",
+        "Topic :: Software Development :: Libraries :: Python Modules"
     ],
     python_requires='>=3.6',
 )
