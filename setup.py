@@ -11,7 +11,7 @@ setuptools.setup(
     description="A USC Class Schedule API wrapper",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/TrickRoom/USC-schedule",
+    url="https://github.com/switchswap/USC-schedule",
     packages=setuptools.find_packages(),
     install_requires=[
         'requests'
