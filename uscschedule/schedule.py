@@ -24,7 +24,7 @@ class Schedule:
 
         # Look for course matching number and return it
         for course in dept_courses:
-            if course.course_data.number == course_info[1]:
+            if course.number == course_info[1]:
                 return course
 
         # If it can't be found, return None
@@ -40,7 +40,7 @@ class Schedule:
 
     def get_department_courses(self, department_id: str, semester_id: int):
         department = self.get_department(department_id, semester_id)
-        return department.offered_courses
+        return department.courses
 
     def get_course_listing_json(self, semester_id: int):
         data = {}
