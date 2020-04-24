@@ -15,9 +15,9 @@ class Schedule:
 
         # Error check the given information
         if len(course_info) is not 2:
-            return None
+            raise exceptions.CourseNotFoundException("Could not find course!")
         if not course_info[0].isalpha() or not course_info[1].isdigit():
-            return None
+            raise exceptions.CourseNotFoundException("Could not find course!")
 
         # Get department of course
         dept_courses = self.get_department_courses(course_info[0], semester_id)
@@ -27,7 +27,7 @@ class Schedule:
             if course.number == course_info[1]:
                 return course
 
-        # If it can't be found, return None
+        # If it can't be found, raise Exception
         raise exceptions.CourseNotFoundException("Could not find course!")
 
     def get_department(self, department_id: str, semester_id: int):
