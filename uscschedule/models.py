@@ -8,7 +8,7 @@ class Department(Base):
         super().__init__(response)
         self.schedule_sync_time = response.get("schd_sync_dtm")
 
-        department_info = self.response.get("Dept_Info")
+        department_info = response.get("Dept_Info")
         self.department = department_info.get("department")
         self.abbreviation = department_info.get("abbreviation")
         self.phone_number = department_info.get("phone_number")
@@ -33,15 +33,8 @@ class Course(Base):
         self.cross_listed = response.get("IsCrossListed")
         self.published_course_id = response.get("PublishedCourseID")
         self.scheduled_course_id = response.get("ScheduledCourseID")
-        self.course_data = self.get_course_data()
-
-    def get_course_data(self):
-        return CourseData(self.response.get("CourseData"))
-
-
-class CourseData(Base):
-    def __init__(self, response):
-        super().__init__(response)
+        # Grab course data
+        response = self.response.get("CourseData")
         self.prefix = response.get("prefix")
         self.number = response.get("number")
         self.sequence = response.get("sequence")
@@ -57,14 +50,67 @@ class CourseData(Base):
         self.prereq_text = response.get("prereq_text")
         self.coreq_text = response.get("coreq_text")
         self.sections = self.__get_section_data()
+        self.lecture_capacity = 0
+        self.lecture_registered = 0
+        self.lab_capacity = 0
+        self.lab_registered = 0
+        self.discussion_capacity = 0
+        self.discussion_registered = 0
+        self.is_lab_only = True
+        # Parse class data from section data
+        self.__parse_class_data()
 
     def __get_section_data(self):
-        if type(self.response.get("SectionData")) is list:
-            return [SectionData(response) for response in self.response.get("SectionData")]
-        elif type(self.response.get("SectionData")) is dict:
-            return [SectionData(self.response.get("SectionData"))]
+        response = self.response.get("CourseData")
+        if type(response.get("SectionData")) is list:
+            return [SectionData(response) for response in response.get("SectionData")]
+        elif type(response.get("SectionData")) is dict:
+            return [SectionData(response.get("SectionData"))]
         else:
             return []
+
+    def __parse_class_data(self):
+        for section in self.sections:
+            # If section is lecture type (Lecture, Lecture-Lab, Lecture-Discussion)
+            if section.type == "Lec" or section.type == "Lec-Lab" or section.type == "Lec-Dis":
+                self.is_lab_only = False
+                self.lecture_capacity += section.capacity
+                self.lecture_registered += section.registered
+            elif section.type == "Lab":
+                self.lab_capacity += section.capacity
+                self.lab_registered += section.registered
+            elif section.type == "Dis":  # Discussion
+                self.is_lab_only = False
+                self.discussion_capacity += section.capacity
+                self.discussion_registered += section.registered
+            else:  # Quiz (Qz)
+                self.is_lab_only = False
+
+    def is_full(self) -> bool:
+        """
+        If all sections are full, the course is fully closed
+        """
+        # If difference of capacity and registered students is less than 0, the class must be full
+        return (self.lecture_capacity + self.lab_capacity + self.discussion_capacity) - \
+               (self.lecture_registered + self.lab_registered + self.discussion_registered) <= 0
+
+    def has_lecture_sections(self) -> bool:
+        return self.lecture_capacity > 0
+
+    def has_discussion_sections(self) -> bool:
+        return self.discussion_capacity > 0
+
+    def has_lab_sections(self) -> bool:
+        return self.lab_capacity > 0
+
+    def all_lectures_closed(self) -> bool:
+        return self.lecture_capacity - self.lecture_registered <= 0
+
+    def all_discussions_closed(self) -> bool:
+        return self.discussion_capacity - self.discussion_registered <= 0
+
+    def all_labs_closed(self) -> bool:
+        return self.lab_capacity - self.lab_registered <= 0
 
 
 class SectionData(Base):
@@ -110,6 +156,10 @@ class SectionData(Base):
             return [Fee(self.response.get("fee"))]
         else:
             return []
+
+    def get_available_spots(self) -> int:
+        return self.capacity - self.registered
+
 
 
 class Instructor(Base):
