@@ -16,9 +16,9 @@ class Department(Base):
         self.notes = department_info.get("Notes")
         self.term_notes = department_info.get("TermNotes")
         self.department_url = department_info.get("dept_url")
-        self.offered_courses = self.get_offered_courses()
+        self.courses = self.__get_courses()
 
-    def get_offered_courses(self):
+    def __get_courses(self):
         if type(self.response.get("OfferedCourses").get("course")) is list:
             return [Course(response) for response in self.response.get("OfferedCourses").get("course")]
         elif type(self.response.get("OfferedCourses").get("course")) is dict:
@@ -56,9 +56,9 @@ class CourseData(Base):
         self.course_term_notes = response.get("CourseTermNotes")
         self.prereq_text = response.get("prereq_text")
         self.coreq_text = response.get("coreq_text")
-        self.section_data = self.get_section_data()
+        self.sections = self.__get_section_data()
 
-    def get_section_data(self):
+    def __get_section_data(self):
         if type(self.response.get("SectionData")) is list:
             return [SectionData(response) for response in self.response.get("SectionData")]
         elif type(self.response.get("SectionData")) is dict:
@@ -79,20 +79,23 @@ class SectionData(Base):
         self.notes = response.get("notes")
         self.type = response.get("type")
         self.units = response.get("units")
-        self.spaces_available = response.get("spaces_available")
-        self.number_registered = response.get("number_registered")
+        self.capacity = int(response.get("spaces_available"))
+        self.registered = int(response.get("number_registered"))
         self.wait_quantity = response.get("wait_qty")
-        self.canceled = response.get("canceled")
+        self.canceled = True if self.response.get("canceled") == "Y" else False
         self.blackboard = response.get("blackboard")
         self.day = response.get("day")
         self.start_time = response.get("start_time")
         self.end_time = response.get("end_time")
         self.location = response.get("location")
-        self.distance_learning = response.get("IsDistanceLearning")
-        self.instructors = self.get_instructors()
-        self.fees = self.get_fees()
+        self.distance_learning = True if response.get("IsDistanceLearning") == "Y" else False
+        self.instructors = self.__get_instructors()
+        self.fees = self.__get_fees()
 
-    def get_instructors(self):
+        # Section is close if there are greater or equal registered than available
+        self.closed = self.registered >= self.capacity
+
+    def __get_instructors(self):
         if type(self.response.get("instructor")) is list:
             return [Instructor(response) for response in self.response.get("instructor")]
         elif type(self.response.get("instructor")) is dict:
@@ -100,7 +103,7 @@ class SectionData(Base):
         else:
             return []
 
-    def get_fees(self):
+    def __get_fees(self):
         if type(self.response.get("fee")) is list:
             return [Fee(response) for response in self.response.get("fee")]
         elif type(self.response.get("fee")) is dict:
