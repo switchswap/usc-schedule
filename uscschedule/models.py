@@ -160,6 +160,8 @@ class SectionData(Base):
     def get_available_spots(self) -> int:
         return self.capacity - self.registered
 
+    def requires_d_clearance(self) -> bool:
+        return self.dclass_code == 'D'
 
 
 class Instructor(Base):
