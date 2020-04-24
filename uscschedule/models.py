@@ -30,7 +30,7 @@ class Department(Base):
 class Course(Base):
     def __init__(self, response):
         super().__init__(response)
-        self.cross_listed = response.get("IsCrossListed")
+        self.cross_listed = True if response.get("IsCrossListed") == "Y" else False
         self.published_course_id = response.get("PublishedCourseID")
         self.scheduled_course_id = response.get("ScheduledCourseID")
         # Grab course data
