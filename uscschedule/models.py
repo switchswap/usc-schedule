@@ -1,10 +1,10 @@
 class Base:
-    def __init__(self, response):
+    def __init__(self, response: dict):
         self.response = response
 
 
 class Department(Base):
-    def __init__(self, response):
+    def __init__(self, response: dict):
         super().__init__(response)
         self.schedule_sync_time = response.get("schd_sync_dtm")
 
@@ -28,7 +28,7 @@ class Department(Base):
 
 
 class Course(Base):
-    def __init__(self, response):
+    def __init__(self, response: dict):
         super().__init__(response)
         self.cross_listed = True if response.get("IsCrossListed") == "Y" else False
         self.published_course_id = response.get("PublishedCourseID")
@@ -114,7 +114,7 @@ class Course(Base):
 
 
 class SectionData(Base):
-    def __init__(self, response):
+    def __init__(self, response: dict):
         super().__init__(response)
         self.id = response.get("id")
         self.session = response.get("session")
@@ -165,7 +165,7 @@ class SectionData(Base):
 
 
 class Instructor(Base):
-    def __init__(self, response):
+    def __init__(self, response: dict):
         super().__init__(response)
         self.first_name = response.get("first_name")
         self.last_name = response.get("last_name")
@@ -176,7 +176,7 @@ class Instructor(Base):
 
 
 class Fee(Base):
-    def __init__(self, response):
+    def __init__(self, response: dict):
         super().__init__(response)
         self.description = response.get("description")
         self.amount = response.get("amount")
