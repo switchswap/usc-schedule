@@ -9,7 +9,7 @@ class Schedule:
     def __init__(self):
         self.session = requests.Session()
 
-    def get_course(self, course_id: str, semester_id: int):
+    def get_course(self, course_id: str, semester_id: int) -> models.Course:
         # Split course_id into Department and Number
         course_info = course_id.split('-')
 
@@ -30,7 +30,7 @@ class Schedule:
         # If it can't be found, raise Exception
         raise exceptions.CourseNotFoundException("Could not find course!")
 
-    def get_department(self, department_id: str, semester_id: int):
+    def get_department(self, department_id: str, semester_id: int) -> models.Department:
         url = f"https://web-app.usc.edu/web/soc/api/classes/{department_id}/{semester_id}"
         try:
             response = self.session.get(url).json()
@@ -38,7 +38,7 @@ class Schedule:
         except json.JSONDecodeError:
             raise exceptions.DepartmentNotFoundException("Could not find department!")
 
-    def get_department_courses(self, department_id: str, semester_id: int):
+    def get_department_courses(self, department_id: str, semester_id: int) -> list:
         department = self.get_department(department_id, semester_id)
         return department.courses
 
