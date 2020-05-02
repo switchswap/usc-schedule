@@ -22,7 +22,7 @@ schedule = Schedule()
 csci_department = schedule.get_department(department_id="CSCI", semester_id=20201)
 # Alternatively: schedule.get_department("CSCI", 20201)
 print(csci_department.department)
-print(csci_department.abbreviation )
+print(csci_department.abbreviation)
 print(csci_department.department_url)
 
 # Prints:
@@ -36,9 +36,9 @@ print(csci_department.department_url)
 ```python
 csci_course = schedule.get_course(course_id="CSCI-201", semester_id=20201)
 # Alternatively: schedule.get_course("CSCI-201", 20201)
-print(csci_course.course_data.title)
-print(csci_course.course_data.units)
-print(csci_course.course_data.description)
+print(csci_course.title)
+print(csci_course.units)
+print(csci_course.description)
 
 # Prints:
 # Principles of Software Development
