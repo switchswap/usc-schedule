@@ -14,7 +14,7 @@ class Schedule:
         course_info = course_id.split('-')
 
         # Error check the given information
-        if len(course_info) is not 2:
+        if len(course_info) != 2:
             raise exceptions.CourseNotFoundException("Could not find course!")
         if not course_info[0].isalpha() or not course_info[1].isdigit():
             raise exceptions.CourseNotFoundException("Could not find course!")
