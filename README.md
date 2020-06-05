@@ -1,8 +1,8 @@
 # USC-Schedule
 USC Schedule of Classes API wrapper
 
-[![PyPI version](https://badge.fury.io/py/usc-schedule.svg)](https://badge.fury.io/py/usc-schedule)
-
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/switchswap/usc-schedule/Python%20package?style=for-the-badge) 
+![PyPI](https://img.shields.io/pypi/v/usc-schedule?style=for-the-badge) 
 
 ## Introduction
 This library provides a python interface for the USC Schedule of Classes api. It works for Python versions from 3.6 onwards.
